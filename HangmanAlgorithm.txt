@@ -1,0 +1,22 @@
+Create home screen: 2 buttons one for playing and other is for instructions
+User clicked instructions: 
+ Output instruction (Refer to prototype) 
+ User clicked lets play 
+  Three new buttons, level one, two, and three // levels just increase number of letters, overal program will stay the same 
+  user clicks level 1: 
+    Assign the array Word1 with the number of letters in the word "computer" 
+    Assign each letter as a value in the array Word1
+    output dashes as the placeholder for user inputs //number of values in the list is the amount of dashes 
+    Create sprites for each letter in "computer" and place them ontop of the dashes 
+    Hide the sprites
+    create individual sprites for each part of the hangman 
+    hide the sprite 
+    create a while loop that will run untill user inputs stop 
+        user input their guess (assign variable, UserGuess, for user input)
+        Create a for loop that will go through every value in the array Word1 and see if any letters match UserGuess. 
+          if UserGuess matches a value in the list 
+            unhide the sprite with the matched letter 
+          else 
+            unhide the sprite for hangman body part 
+            output "try again"
+     
