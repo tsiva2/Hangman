@@ -3,9 +3,10 @@ User clicked instructions:
  Output instruction (Refer to prototype) 
  User clicked lets play 
   Three new buttons, level one, two, and three // levels just increase number of letters, overal program will stay the same 
+  // have all words in an array, with each row a level, and each level has it's own column in the array of potential words for the hangman
   user clicks level 1: 
-    Assign the array Word1 with the number of letters in the word "computer" 
-    Assign each letter as a value in the array Word1
+    Assign the array Word1 to hold the number of letters in the word "computer" // randomly chosen word based on array
+    Assign each letter as a value in the array Word1 // ie Word1[1] = "o"
     output dashes as the placeholder for user inputs //number of values in the list is the amount of dashes 
     Create sprites for each letter in "computer" and place them ontop of the dashes 
     Hide the sprites
@@ -13,10 +14,26 @@ User clicked instructions:
     hide the sprite 
     create a while loop that will run untill user inputs stop 
         user input their guess (assign variable, UserGuess, for user input)
+        perform try catch to validate if a proper letter was inputted, ie cannot be converted to double
         Create a for loop that will go through every value in the array Word1 and see if any letters match UserGuess. 
           if UserGuess matches a value in the list 
             unhide the sprite with the matched letter 
           else 
             unhide the sprite for hangman body part 
             output "try again"
+            tell user that they need to get a math question right to continue
+            go to the math method
+  math method:
+    create a while loop that will run until user gets answer correct
+      randomly choose type of math problem (addition, subtraction, multiplication, division, solve for x)
+      generate the random integers
+      create integer value mathAnswer, equal to the answer of the problem
+      print out the question and ask the user for the answer
+      in for loop that runs 3 times // they get 3 chances
+        check if answer is valid integer
+        if user's input is equal to mathAnswer
+          ouput "correct" and exit the loop
+        else
+          output "incorrect and ask them to try again"
+     output "try a different question"
      
