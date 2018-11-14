@@ -32,7 +32,7 @@ User clicked instructions:
       in for loop that runs 3 times // they get 3 chances
         check if answer is valid integer
         if user's input is equal to mathAnswer
-          ouput "correct" and exit the loop
+          ouput "correc, continue to guess the letters" and exit the loop
         else
           output "incorrect and ask them to try again"
      output "try a different question"
