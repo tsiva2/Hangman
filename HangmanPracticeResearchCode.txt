@@ -1,0 +1,165 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package hangmanattempt;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javax.swing.JApplet;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import java.awt.Canvas;
+import java.awt.Graphics;
+import javax.swing.JFrame;
+
+/**
+ *
+ * @author S331385567
+ */
+public class HangmanAttempt extends JApplet {
+    
+    private static final int JFXPANEL_WIDTH_INT = 300;
+    private static final int JFXPANEL_HEIGHT_INT = 250; 
+    private static JFXPanel fxContainer;
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        HangmanAttempt Eq1 = new HangmanAttempt(); 
+        SwingUtilities.invokeLater(new Runnable() {
+            
+            @Override
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+                } catch (Exception e) {
+                }
+                
+                JFrame frame = new JFrame("JavaFX 2 in Swing");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                
+                JApplet applet = new HangmanAttempt();
+                applet.init();
+                
+                frame.setContentPane(applet.getContentPane());
+                
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+                
+                applet.start();
+            }
+        });
+    }
+    
+    @Override
+    public void init() {
+        fxContainer = new JFXPanel();
+        fxContainer.setPreferredSize(new Dimension(JFXPANEL_WIDTH_INT, JFXPANEL_HEIGHT_INT));
+        add(fxContainer, BorderLayout.CENTER);
+        // create JavaFX scene
+        Platform.runLater(new Runnable() {
+            
+            @Override
+            public void run() {
+                createScene();
+            }
+        });
+    }
+    
+    private void createScene() { 
+        Button instructions = new Button();
+        instructions.setText("Instructions");
+        //instructions.setBounds(100,100,95,30); 
+        Button play = new Button();
+        play.setText("Play Game");
+        //play.setBounds(100,200,95,30);
+        
+        StackPane root = new StackPane();
+        instructions.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                System.out.println("1. Pick a level\n" +
+                "2. Guess a letter in the word by asking in the button window\n" +
+                "3. If you think you know the word, ask in the button window\n" +
+                "4. If you guess a word or letter wrong, a body part will be added to your hangman. You will have to answer a math question correctly to continue the game.\n" +
+                "5. If all the body parts are drawn in, you lose.\n" +
+                "6. If you guess the word right or have all the letters in, you win!");
+            }
+        });
+        play.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                JFrame frame = new JFrame("My Drawing");
+                Canvas canvas = new Canvas(); // produces error
+                canvas.setSize(400, 400);
+                frame.add(canvas);
+                frame.pack();
+                frame.setVisible(true);
+                root.getChildren().remove(play);
+                root.getChildren().remove(instructions);
+            }
+        });
+        
+        root.getChildren().add(instructions);
+        root.getChildren().add(play);
+        fxContainer.setScene(new Scene(root));
+    }
+    
+}
+
+///// SECOND CLASS START
+
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+/*package hangmanattempt;
+
+import java.awt.Canvas;
+import java.awt.Graphics;
+import javax.swing.JFrame;
+
+/**
+ *
+ * @author S331385567
+ */
+/*public class HangmanGraphicsAttempt extends HangmanAttempt{
+  
+    
+    //public static void main(String[] args) {
+     public void drawMan(){ 
+       JFrame frame = new JFrame("My Drawing");
+       Canvas canvas = new HangmanGraphicsAttempt();
+       canvas.setSize(400, 400);
+       frame.add(canvas);
+       frame.pack();
+       frame.setVisible(true);
+   }
+
+
+   public void paint(Graphics g) {
+       g.fillOval(100, 100, 200, 200);
+   }
+
+    
+}*/
+
+
+
+
