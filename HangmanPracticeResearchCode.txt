@@ -104,14 +104,12 @@ public class HangmanAttempt extends JApplet {
             
             @Override
             public void handle(ActionEvent event) {
-                JFrame frame = new JFrame("My Drawing");
-                Canvas canvas = new Canvas(); // produces error
-                canvas.setSize(400, 400);
-                frame.add(canvas);
-                frame.pack();
-                frame.setVisible(true);
+                HangmanGraphicsAttempt newGame = new HangmanGraphicsAttempt();
+                newGame.drawMan();
+                
                 root.getChildren().remove(play);
                 root.getChildren().remove(instructions);
+                
             }
         });
         
@@ -122,31 +120,37 @@ public class HangmanAttempt extends JApplet {
     
 }
 
-///// SECOND CLASS START
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-/*package hangmanattempt;
+package hangmanattempt;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
 import javax.swing.JFrame;
+import java.awt.Color;
 
 /**
  *
  * @author S331385567
  */
-/*public class HangmanGraphicsAttempt extends HangmanAttempt{
+public class HangmanGraphicsAttempt extends HangmanAttempt{
   
     
-    //public static void main(String[] args) {
-     public void drawMan(){ 
+    public static void drawMan() { 
        JFrame frame = new JFrame("My Drawing");
-       Canvas canvas = new HangmanGraphicsAttempt();
-       canvas.setSize(400, 400);
+       Canvas canvas = new Canvas(); 
+       canvas.setSize(400, 400);    
+       canvas.setBackground(Color.white);
+                
        frame.add(canvas);
        frame.pack();
        frame.setVisible(true);
@@ -158,8 +162,5 @@ import javax.swing.JFrame;
    }
 
     
-}*/
-
-
-
+}
 
