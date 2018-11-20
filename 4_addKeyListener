@@ -1,0 +1,43 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package hangmangame;
+
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+
+
+/**
+ *
+ * @author S331385567
+ */
+public class addKeyListener extends KeyAdapter{
+    
+    private String [] List1Word;
+    
+    public addKeyListener(String[] list){
+        this.List1Word = list ;
+    }
+    
+    public void keyPressesd(KeyEvent e){
+        int key = e.getKeyCode();
+        
+        for (int i=0; i<List1Word.length; i++){
+            if key == KeyEvent.List1Word[i]{
+                
+            } 
+        }
+    }
+    
+    
+  public void keyPressed(KeyEvent e){
+    text+=e.getKeyChar();
+
+    //you might not need this is you are rendering constantly
+    repaint();
+  }          
+
+
+}
