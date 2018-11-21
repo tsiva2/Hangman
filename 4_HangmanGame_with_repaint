@@ -35,36 +35,64 @@ import javax.swing.*;    // Using Swing's components and containers
  *
  * @author S331385567
  */
-public class HangmanGame extends JApplet {
+public class HangmanGame extends JApplet{
 
     private static String[] Level1Word;
     private static String[] Level2Word;
     private static String[] Level3Word;
     
-    private Canvas canvas; // The custom drawing canvas, produces error, example called it "DrawCanvas instead of "Canvas"
-    
-
     private static final int JFXPANEL_WIDTH_INT = 300;
     private static final int JFXPANEL_HEIGHT_INT = 250;
     private static JFXPanel fxContainer;
+    
+    private static Container cp;
+    private static JApplet hangmanapplet;
+    private static JButton submitbtn;
 
     /**
      * @param args the command line arguments
      */
-    public HangmanGame() {
+    public HangmanGame(String x) {
         this.Level1Word = Level1List();
         this.Level2Word = Level2List();
         this.Level3Word = Level3List();
         
+    }
+    
+    public HangmanGame() {
+        DrawMan canvas = new DrawMan();
+        canvas.setPreferredSize(new Dimension(500, 400));
+        JPanel btnPanel = new JPanel(new FlowLayout());
         
-
+        //textField = new JTextField(); // suggest a size in columns
+        JTextField textField = new JTextField(8);
+        //textField.setBounds(5, 5, 280, 50); // to get height, set large font
+        textField.setFont(textField.getFont().deriveFont(20f));
+        btnPanel.add(textField);
+      
+        JButton submitbtn = new JButton("Submit");
+        btnPanel.add(submitbtn);
+        /*btnPanel.addActionListener(new ActionListener() {
+            @Override
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+            System.out.println("hi");
+         }
+        });*/
+        
+        // Add both panels to this JFrame's content-pane
+        cp = getContentPane(); //getContentPane(); // new Container();
+        cp.setLayout(new BorderLayout());
+        cp.add(canvas, BorderLayout.CENTER);
+        cp.add(btnPanel, BorderLayout.SOUTH);
+        
+        
     }
 
     public static void main(String[] args) {
         
         SwingUtilities.invokeLater(new Runnable() {
 
-            HangmanGame man = new HangmanGame();
+            //HangmanGame man = new HangmanGame();
 
             @Override
             public void run() {
@@ -76,7 +104,7 @@ public class HangmanGame extends JApplet {
                 JFrame frame = new JFrame("JavaFX 2 in Swing");
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-                JApplet applet = new HangmanGame();
+                JApplet applet = new HangmanGame("initializing");
                 applet.init();
 
                 frame.setContentPane(applet.getContentPane());
@@ -155,7 +183,7 @@ public class HangmanGame extends JApplet {
         return new String[]{"c", "o", "m", "p", "u", "t", "e", "r", "s", "c", "i", "e", "n", "c", "e"};
     }
     
-    public static void playGame(){
+    public void playGame(){
         int size = Level1Word.length;
         char guess;
         //String [] lettersGuesses = new String [26] ; // not being used yet
@@ -170,12 +198,39 @@ public class HangmanGame extends JApplet {
         
         JFrame hangmanframe = new JFrame ("Hangman Screen");
         hangmanframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        hangmanapplet = new HangmanGame();
+        hangmanapplet.init();
+        hangmanframe.setContentPane(hangmanapplet.getContentPane());
         DrawMan h = new DrawMan();
         hangmanframe.add(h);
-        hangmanframe.setSize(500, 400);
+        hangmanframe.setSize(500, 500);
         hangmanframe.setVisible(true);
         
+        HangmanGame man = new HangmanGame();
+        
         h.wordAns = Level1Word;
+        
+        
+        /*submitbtn.addActionListener(new ActionListener(){ // NOT WORKING
+            //@Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println("Do Something Clicked");
+            }
+        });*/
+        
+        /*submitbtn.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                
+                System.out.println("Do Something Clicked");
+            }
+        });*/
+        
+        
+        //submitbtn.addActionListener(this);
+        
+       
         
         for (int i=0; i<6; i++){
             
