@@ -48,6 +48,7 @@ public class HangmanGame extends JApplet{
     private static Container cp;
     private static JApplet hangmanapplet;
     private static JButton submitbtn;
+    private static JTextField textField;
 
     /**
      * @param args the command line arguments
@@ -65,13 +66,15 @@ public class HangmanGame extends JApplet{
         JPanel btnPanel = new JPanel(new FlowLayout());
         
         //textField = new JTextField(); // suggest a size in columns
-        JTextField textField = new JTextField(8);
+        textField = new JTextField(8);
         //textField.setBounds(5, 5, 280, 50); // to get height, set large font
         textField.setFont(textField.getFont().deriveFont(20f));
         btnPanel.add(textField);
       
-        JButton submitbtn = new JButton("Submit");
+        submitbtn = new JButton("Submit");
         btnPanel.add(submitbtn);
+        
+        
         /*btnPanel.addActionListener(new ActionListener() {
             @Override
          public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -84,10 +87,12 @@ public class HangmanGame extends JApplet{
         cp.setLayout(new BorderLayout());
         cp.add(canvas, BorderLayout.CENTER);
         cp.add(btnPanel, BorderLayout.SOUTH);
-        
+        String userGuessInput = textField.getText();
+        System.out.println(userGuessInput);
         
     }
-
+    
+    
     public static void main(String[] args) {
         
         SwingUtilities.invokeLater(new Runnable() {
@@ -132,6 +137,7 @@ public class HangmanGame extends JApplet{
             }
         });
     }
+    
 
     private void createScene() {
         JPanel addPanel = new JPanel();
@@ -157,6 +163,7 @@ public class HangmanGame extends JApplet{
                 root.getChildren().remove(btn2);
                 playGame();
             }
+         
         });
         
 
@@ -183,7 +190,29 @@ public class HangmanGame extends JApplet{
         return new String[]{"c", "o", "m", "p", "u", "t", "e", "r", "s", "c", "i", "e", "n", "c", "e"};
     }
     
+    public String enterGuess (){ 
+        Scanner scanner = new Scanner(System.in);
+        
+        String userGuess = textField.getText();
+        while(userGuess!=null) {
+            System.out.println(userGuess);
+
+            if (userGuess.isEmpty()) {
+            System.out.println("Read Enter Key.");
+            }
+
+            if (scanner.hasNextLine()) {
+                //userGuess = scanner.nextLine();
+                userGuess = textField.getText();
+            } else {
+                userGuess = null;
+            }
+        }
+        return userGuess;
+    }
+    
     public void playGame(){
+        
         int size = Level1Word.length;
         char guess;
         //String [] lettersGuesses = new String [26] ; // not being used yet
@@ -207,6 +236,7 @@ public class HangmanGame extends JApplet{
         hangmanframe.setVisible(true);
         
         HangmanGame man = new HangmanGame();
+        System.out.println(enterGuess ()); 
         
         h.wordAns = Level1Word;
         
@@ -243,6 +273,8 @@ public class HangmanGame extends JApplet{
             //h.requestFocus(); // works without it
             
         }
+        
+        
         
         
     }
