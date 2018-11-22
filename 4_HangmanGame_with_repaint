@@ -298,6 +298,10 @@ public class HangmanGame extends JApplet{
             
             // this line needs to be changed so guess equals value entered in text field
             guess = input.next().charAt(0);
+            if (Character.isLetter(guess) == false){
+                System.out.println("not a letter");
+                continue;
+            }
             
             check = checkifcorrect(guess);
             if (check==1){
