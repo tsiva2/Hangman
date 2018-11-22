@@ -63,6 +63,7 @@ public class HangmanGame extends JApplet{
         this.Level1Word = Level1List();
         this.Level2Word = Level2List();
         this.Level3Word = Level3List();
+      //  addKeyListener(new UserIn())
         
     }
     
@@ -74,20 +75,43 @@ public class HangmanGame extends JApplet{
         textField = new JTextField(15);
         textField.setFont(textField.getFont().deriveFont(20f));
         textField.setText("Enter guess here"); // seems to stay as a constant value
+        TextFieldListener tfListener = new TextFieldListener();
+        textField.addActionListener(tfListener);
+        textField.setEditable(true);
+        
         btnPanel.add(textField);
+        
+        this.getContentPane().add(textField);
+      textField.requestFocus();        // start with focus on this field
       
         submitbtn = new JButton("Submit");
         btnPanel.add(submitbtn);
+        
+
+   // The listener for the textfield.
+   
+
+        /////////////////////////////////
         
         
         // THIS WORKS!!!
         submitbtn.addActionListener(new ActionListener() {
             @Override
-         public void actionPerformed(java.awt.event.ActionEvent evt) {
+         /*public void actionPerformed(java.awt.event.ActionEvent evt) {
+             
             String input = textField.getText(); // text remains as initial value
+            double textField = Double.parseDouble(input);
             System.out.println("*"+input + "*"); // text doesn't show up
             System.out.println("button works");
-         }
+         }*/
+         private class TextFieldListener implements ActionListener
+   {  public void actionPerformed(ActionEvent evt)
+      {  String inputString = textField.getText();
+        System.out.println(inputString);
+         //textField.append(inputString + "\n");
+         //textField.setText("");
+      }
+   }
         });
         
         // Add both panels to this JFrame's content-pane
