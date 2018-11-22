@@ -5,6 +5,7 @@
  */
 package hangmangame;
 
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -21,6 +22,10 @@ public class DrawMan extends JPanel {
     public static int livesLost = 0 ; // would indicate number of body parts drawn
     public static String[] wordAns;
     public static String[] wordGuess;
+    
+    public Canvas canvas; // The custom drawing canvas
+    
+    public static boolean win = false;
     
     
     // need to somehow make this run when its called
@@ -47,6 +52,21 @@ public class DrawMan extends JPanel {
         g2.drawLine(x+50, 10, 10, 10);
         g2.drawLine(x+50, 10, x+50, y+50);
         
+        // writes out word to be guessed ("_" if unknown, letter if guessed correctly)
+        boolean drawn = false;
+        for (int m=0; m<wordAns.length; m++){
+            drawn = false;
+            for (int n=0; n<wordGuess.length; n++){
+                 if (wordGuess[n].equalsIgnoreCase(wordAns[m]) ){
+                     g2.drawString(wordAns[m], (150 + 20*m), 200); 
+                     drawn = true;
+                }
+             }
+             if (!drawn){
+                 g2.drawString("_", (150 + 20*m), 200);
+             } 
+        }
+        
         // man
         if (livesLost>=1){
             g2.fillOval (x, y, 100, 100);  
@@ -68,10 +88,13 @@ public class DrawMan extends JPanel {
             g2.drawString("GAME OVER", 150, 100);
             g2.drawString("The word was: " + getWord(), 150, 150); // put word here
         }
+        if (win){
+            g2.drawString("YOU WIN", 150, 100);
+        }
         
     }
     
-    public static String getWord(){
+    public static String getWord(){ // just converts array of wordAns to string value
         String answer = "";
         for (int j=0; j<(wordAns.length); j++){
             answer = answer+wordAns[j];
