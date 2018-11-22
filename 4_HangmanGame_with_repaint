@@ -31,6 +31,10 @@ import java.awt.*;       // Using AWT's Graphics and Color
 import java.awt.event.*; // Using AWT's event classes and listener interface
 import javax.swing.*;    // Using Swing's components and containers
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+
 /**
  *
  * @author S331385567
@@ -40,6 +44,7 @@ public class HangmanGame extends JApplet{
     private static String[] Level1Word;
     private static String[] Level2Word;
     private static String[] Level3Word;
+    private static String [] correctGuess;
     
     private static final int JFXPANEL_WIDTH_INT = 300;
     private static final int JFXPANEL_HEIGHT_INT = 250;
@@ -175,14 +180,15 @@ public class HangmanGame extends JApplet{
         fxContainer.setScene(new Scene(root));
     }
 
+    // code so far only works for words with no repetition of letters
     public String[] Level1List() {
         //String [] Level1 = new String []{"s", "c", "h", "o", "o", "l"};
-        return new String[]{"s", "c", "h", "o", "o", "l"};
+        return new String[]{"s", "c", "h", "o", "l", "a", "r"};
     }
 
     public String[] Level2List() {
         //String [] Level2 = new String []{"e", "c", "o", "n", "o", "m", "i", "c", "s"};
-        return new String[]{"e", "c", "o", "n", "o", "m", "i", "c", "s"};
+        return new String[]{"c", "h", "e", "m", "i", "s", "t", "r", "y"};
     }
 
     public String[] Level3List() {
@@ -190,7 +196,7 @@ public class HangmanGame extends JApplet{
         return new String[]{"c", "o", "m", "p", "u", "t", "e", "r", "s", "c", "i", "e", "n", "c", "e"};
     }
     
-    public String enterGuess (){ 
+    /*public String enterGuess (){ 
         Scanner scanner = new Scanner(System.in);
         
         String userGuess = textField.getText();
@@ -198,24 +204,43 @@ public class HangmanGame extends JApplet{
             System.out.println(userGuess);
 
             if (userGuess.isEmpty()) {
-            System.out.println("Read Enter Key.");
+                System.out.println("Read Enter Key.");
             }
 
-            if (scanner.hasNextLine()) {
+            if (scanner.hasNextLine()) { // doesn't get called
                 //userGuess = scanner.nextLine();
                 userGuess = textField.getText();
             } else {
-                userGuess = null;
+                //userGuess = null;
+                userGuess = textField.getText();
             }
+            //int keycode = e.getKeyCode();
+            //if (HangmanGame.isWPressed()) {
+              
+            //}
         }
         return userGuess;
+    }*/
+    
+    public void keyPressed(KeyEvent e){
+        String key = e.getKeyText(e.getKeyCode());
+        if(key.equals("Space")){
+            System.out.println("works");
+            String userGuess = textField.getText();
+            System.out.println(textField);
+        }
+        
     }
     
     public void playGame(){
         
         int size = Level1Word.length;
         char guess;
-        //String [] lettersGuesses = new String [26] ; // not being used yet
+        correctGuess = new String [Level1Word.length] ;
+        for (int k=0; k<correctGuess.length; k++){
+            correctGuess[k] = "*";
+        }
+        int numCorrect = 0;
         
         System.out.print("Guess the following word:");
         for (int i = 1; i <= size; i++) {
@@ -236,9 +261,10 @@ public class HangmanGame extends JApplet{
         hangmanframe.setVisible(true);
         
         HangmanGame man = new HangmanGame();
-        System.out.println(enterGuess ()); 
+        //System.out.println(enterGuess ()); 
         
         h.wordAns = Level1Word;
+        h.wordGuess = correctGuess;
         
         
         /*submitbtn.addActionListener(new ActionListener(){ // NOT WORKING
@@ -260,22 +286,70 @@ public class HangmanGame extends JApplet{
         
         //submitbtn.addActionListener(this);
         
-       
+        int check;
         
-        for (int i=0; i<6; i++){
+        while((h.livesLeft>0) && (numCorrect<Level1Word.length)){
             
             System.out.println("Guess a letter");
-            guess = input.next().charAt(0);
-            //canvas.repaint(); // doesn't work
-            h.livesLost +=1 ;
-            h.livesLeft = 6 - h.livesLost ;
-            h.repaint(); 
-            //h.requestFocus(); // works without it
             
+            // this line needs to be changed so guess equals value entered in text field
+            guess = input.next().charAt(0);
+            
+            check = checkifcorrect(guess, correctGuess);
+            if (check==1){
+                System.out.println("correct");
+                correctGuess[numCorrect] = Character.toString(guess);
+                numCorrect+= 1;
+                h.wordGuess = correctGuess;
+                h.repaint();
+            }else if (check==0){
+                h.livesLost +=1 ;
+                h.livesLeft = 6 - h.livesLost ;
+                h.repaint(); 
+                //h.requestFocus(); // works without it
+            }
+            
+        }
+        if (numCorrect==Level1Word.length){
+            System.out.println("YOU WIN");
+            h.win = true;
+            h.repaint(); 
+        }
+        
+        for (int z=0; z<h.wordGuess.length; z++){
+            System.out.print(correctGuess[z]);
+        
         }
         
         
         
+        
+    }
+    
+    public static int checkifcorrect(Character userguess, String[] pastcorrect){
+        String userguessString = Character.toString(userguess);
+        int isitcorrect = 0;
+        for (int y=0; y<Level1Word.length; y++){
+            if (userguessString.equalsIgnoreCase(Level1Word[y])){
+                System.out.println("correct,");
+                
+                for (int z=0; z<pastcorrect.length; z++){
+                    if (userguessString.equalsIgnoreCase(pastcorrect[z]) ){ // if not already guessed and correct
+                        System.out.println("but you already guessed this");
+                        isitcorrect = 2;
+                        break;
+                        // shouldn't draw body part if here
+                    }else{
+                        isitcorrect = 1;
+                    }
+                }
+            }
+            if (isitcorrect==1){
+                break;
+            }
+        }
+        
+        return isitcorrect;
         
     }
 
