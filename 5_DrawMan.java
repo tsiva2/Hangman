@@ -30,19 +30,22 @@ public class DrawMan extends JPanel {
     
     public static boolean win;
     
+    public static int levelGraphics = 1;
+    
     
     // need to somehow make this run when its called
     // and have the word and number of guesses as parameters
     public DrawMan (){
         // start
     }
-    public DrawMan (String[] wordArray, String[] correctArray){
+    public DrawMan (String[] wordArray, String[] correctArray, int lev){
         this.livesLeft = 6;
         this.livesLost = 0;
         this.win = false;
         this.wordAns = wordArray;
         this.wordGuess = correctArray;
         this.check = -1;
+        this.levelGraphics = lev;
     
     }
     public void paintComponent (Graphics g){ 
@@ -115,6 +118,13 @@ public class DrawMan extends JPanel {
             g2.drawString("invalid guess", 150, 100);
         }else if (check==0){
             g2.drawString("incorrect", 150, 100);
+        }
+        if (win && (levelGraphics>=3) ){
+            g2.setColor(Color.BLUE);
+            g2.fillRect(0, 0, 400, 400);
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+            g2.drawString("YOU WON ALL 3 LEVELS", 0, 200);
         }
         
     }
