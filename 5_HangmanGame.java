@@ -49,7 +49,8 @@ public class HangmanGame extends JApplet{
     private static String[] Level3Word;
     private static String [] correctGuess;
     private static String [] letterGuess;
-    private int level = 1;
+    private static int level = 1;
+    
     
     private static final int JFXPANEL_WIDTH_INT = 300;
     private static final int JFXPANEL_HEIGHT_INT = 100;
@@ -241,7 +242,7 @@ public class HangmanGame extends JApplet{
     public String[] Level3List() {
         Random rand = new Random();
         int n = rand.nextInt(3); // 4 options (0 to 3)
-        String[] arrayWord = new String []{"a", "l", "g", "o", "r", "i", "t", "m"}; // if n==0
+        String[] arrayWord = new String []{"a", "l", "g", "o", "r", "i", "t", "h", "m"}; // if n==0
         switch (n){
             case 1: 
                 arrayWord = new String[] {"g", "i", "t", "h", "u", "b"};
@@ -262,11 +263,9 @@ public class HangmanGame extends JApplet{
         String userGuess = textField.getText();
         while(userGuess!=null) {
             System.out.println(userGuess);
-
             if (userGuess.isEmpty()) {
                 System.out.println("Read Enter Key.");
             }
-
             if (scanner.hasNextLine()) { // doesn't get called
                 //userGuess = scanner.nextLine();
                 userGuess = textField.getText();
@@ -322,7 +321,7 @@ public class HangmanGame extends JApplet{
         hangmanapplet = new HangmanGame();
         hangmanapplet.init();
         hangmanframe.setContentPane(hangmanapplet.getContentPane());
-        DrawMan h = new DrawMan(LevelWord, correctGuess);
+        DrawMan h = new DrawMan(LevelWord, correctGuess, level);
         hangmanframe.add(h);
         hangmanframe.setSize(500, 500);
         hangmanframe.setVisible(true);
@@ -340,7 +339,6 @@ public class HangmanGame extends JApplet{
         });*/
         
         /*submitbtn.setOnAction(new EventHandler<ActionEvent>() {
-
             @Override
             public void handle(ActionEvent event) {
                 
@@ -361,7 +359,7 @@ public class HangmanGame extends JApplet{
             userinput = input.nextLine();
             guess = userinput.charAt(0);
             
-            if ((Character.isLetter(guess) == false)|| (userinput.length()!= 1) ) {
+            if ((Character.isLetter(guess) == false)|| (userinput.length()!= 1) ) { // if invalid input
                 h.check = 3;
                 continue;
             }
@@ -390,6 +388,7 @@ public class HangmanGame extends JApplet{
             h.repaint(); 
             if (level<3){
                 level ++;
+                hangmanframe.setVisible(false);
                 playGame();
             }
         }
