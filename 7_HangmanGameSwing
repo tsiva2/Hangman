@@ -37,6 +37,8 @@ import java.awt.event.KeyEvent;
 
 import java.util.Random;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  * @author S331385567
@@ -62,13 +64,16 @@ public class HangmanGameSwing extends JApplet{
     /**
      * @param args the command line arguments
      */
+    
+    
     public HangmanGameSwing() {
         this.Level1Word = Level1List();
         this.Level2Word = Level2List();
         this.Level3Word = Level3List();       
     }
     
-     public HangmanGameSwing(String x) {
+    
+    public HangmanGameSwing(String x) {
         DrawMan canvas = new DrawMan();
         canvas.setPreferredSize(new Dimension(500, 400));
         JPanel btnPanel = new JPanel(new FlowLayout());
@@ -80,24 +85,24 @@ public class HangmanGameSwing extends JApplet{
         instructionsbtn.addActionListener(new ActionListener() {
             @Override
          public void actionPerformed(java.awt.event.ActionEvent evt) {
-            System.out.println("Review Instructions");
-            System.out.println("1. Guess a letter in the word by asking in the text screen");
+            System.out.println("Hangman Instructions");
+            System.out.println("1. Guess a letter in the word by asking in the output text screen");
             System.out.println("2. If you guess a word or letter wrong, a body part will be added to your hangman.");
-            System.out.println("3. If all the body parts are drawn in, you lose.");
-            System.out.println("4. If you guess the word right or have all the letters in, you move to the next level.");
-            System.out.println("5. Complete all levels and you win!");
+            System.out.println("3. You may/may not get a chance to remove the added body part.");
+            System.out.println("   To do so, answer the math question correctly");
+            System.out.println("4. If all the body parts are drawn in, you lose.");
+            System.out.println("5. If you guess the word right or have all the letters in, you move to the next level.");
+            System.out.println("6. Complete all levels and you win!");
 
          }
         });
         
-        // Add both panels to this JFrame's content-pane
         cp = getContentPane();
         cp.setLayout(new BorderLayout());
         cp.add(canvas, BorderLayout.CENTER);
         cp.add(btnPanel, BorderLayout.SOUTH);
         
     }
-    
     
     
     public static void main(String[] args) {
@@ -130,6 +135,7 @@ public class HangmanGameSwing extends JApplet{
         });
     }
 
+    
     @Override
     public void init() {
         fxContainer = new JFXPanel();
@@ -146,29 +152,28 @@ public class HangmanGameSwing extends JApplet{
     }
     
 
-    private void createScene() { // needs to be formatted if adding more buttons
+    private void createScene() { 
         JPanel addPanel = new JPanel();
+        StackPane root = new StackPane();
 
         Button btn = new Button();
-        btn.setText("Play New Game");
-        
-        StackPane root = new StackPane();
-        
+        btn.setText("Play New Game");        
         btn.setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
             public void handle(ActionEvent event) {
-                
                 root.getChildren().remove(btn);
                 HangmanGameSwing startthegame = new HangmanGameSwing();
-                startthegame.playGame(); // works here
+                startthegame.playGame();
             }
          
         });
         
+        
         root.getChildren().add(btn); 
         fxContainer.setScene(new Scene(root));
     }
+    
     
     // code only works for words with no repetition of letters
     public String[] Level1List() {
@@ -189,6 +194,7 @@ public class HangmanGameSwing extends JApplet{
         return arrayWord;
     }
 
+    
     public String[] Level2List(){ 
         Random rand = new Random();
         int n = rand.nextInt(3); // 4 options (0 to 3)
@@ -207,6 +213,7 @@ public class HangmanGameSwing extends JApplet{
         return arrayWord;
     }
 
+    
     public String[] Level3List() {
         Random rand = new Random();
         int n = rand.nextInt(3); // 4 options (0 to 3)
@@ -226,43 +233,6 @@ public class HangmanGameSwing extends JApplet{
     }
     
     
-    public void startGUI() {
-        
-        System.out.println("started startgui");
-           
-        JFrame startframe = new JFrame("Start Screen");
-        startframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        JButton btn1 = new JButton("Instructions");
-        btn1.setBounds(0, 30, 200, 30);
-        btn1.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                System.out.println("works");
-            }
-        });
-        
-        JButton btn2 = new JButton("Play Game");
-        btn2.setBounds(0, 60, 200, 30);
-        btn2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                System.out.println("works too");
-                HangmanGameSwing startgame = new HangmanGameSwing();
-                startgame.playGame(); // not working here, but works in original button
-                // graphics screen shows up blank, with/wo object
-            }
-        });
-        
-        startframe.add(btn1);      
-        startframe.add(btn2);
-        startframe.setSize(218,190);
-        startframe.setLayout(null); 
-        startframe.setVisible(true);
-        
-        System.out.println("ended startgui");
-    }
-
     
     public void playGame(){
         
@@ -295,7 +265,7 @@ public class HangmanGameSwing extends JApplet{
         hangmanframe.setContentPane(hangmanapplet.getContentPane());
         DrawMan h = new DrawMan(LevelWord, correctGuess, level);
         hangmanframe.add(h);
-        hangmanframe.setSize(500, 500);
+        hangmanframe.setSize(h.length, h.height);
         hangmanframe.setVisible(true);
         
         h.repaint();
@@ -322,11 +292,53 @@ public class HangmanGameSwing extends JApplet{
                 h.wordGuess = correctGuess;
                 h.repaint();
             }else if (h.check==0){ 
-                letterGuess[numGuessed] = Character.toString(guess); // won't do if check == 2 (already guessed letter)
+                letterGuess[numGuessed] = Character.toString(guess); // won't add to letterGuess String[] if check == 2 (it was an already guessed letter)
                 numGuessed+= 1;
                 h.livesLost += 1 ;
                 h.livesLeft = 6 - h.livesLost ;
                 h.repaint();
+                
+                
+                // EXTRA ELEMENT - allows user to remove body part, will have 25% chance of occuring
+                Random rand = new Random();
+                int n = rand.nextInt(3); // 4 options (0 to 3)
+                if (n==0){ // 25% chance
+                    
+                    h.math = true;
+                    h.check = -1;
+                    h.num1 = rand.nextInt(6)+6; // 6 options (6 to 12)
+                    h.num2 = rand.nextInt(9)+3; // 9 options (3 to 12)
+                    repaint();
+                    
+                    String numstringguess="not an int";
+                    while (true){
+                        numstringguess= input.nextLine();
+                        if (checkifint(numstringguess)){
+                            break;
+                        }
+                        h.check = 3; // will output invalid message
+                        h.repaint();
+                    }
+                    int numguess = Integer.parseInt(numstringguess);
+                    if (numguess==(h.num1*h.num2)){
+                        h.check = 1;
+                        h.livesLost -= 1 ;
+                        h.livesLeft = 6 - h.livesLost ;
+                    }else{
+                        h.check = 0;
+                    }
+                    h.repaint();
+                    try{
+                        Thread.sleep(2000); // will wait 2 seconds before continuing
+                    }catch(InterruptedException ex){
+                         Thread.currentThread().interrupt();
+                    }
+                }
+                
+                h.math = false;
+                h.check = -1;
+                h.repaint();
+                // end of extra element
                 
             }
             
@@ -336,9 +348,16 @@ public class HangmanGameSwing extends JApplet{
         
         
         if (numCorrect==LevelWord.length){
+            
             h.win = true;
-            h.repaint(); 
-            if (level<3){
+            h.repaint();
+            try{
+                 Thread.sleep(2000); // will wait 2 seconds before continuing
+            }catch(InterruptedException ex){
+                Thread.currentThread().interrupt();
+            }
+             
+            if (level<3){ // if not all 3 are won
                 level ++;
                 hangmanframe.setVisible(false);
                 playGame();
@@ -346,7 +365,6 @@ public class HangmanGameSwing extends JApplet{
         }
         
     }
-    
     
     
     public static int checkifcorrect(Character userguess){
@@ -368,6 +386,17 @@ public class HangmanGameSwing extends JApplet{
         }
         
         return isitcorrect;    
+    }
+    
+    
+    public static boolean checkifint(String x){
+        try{
+            int y = Integer.parseInt(x);
+            return true;
+        }catch (NumberFormatException ex) {
+            System.out.print("Error, enter integer value:");
+            return false;
+        }
     }
 
 }
