@@ -394,7 +394,6 @@ public class HangmanGameSwing extends JApplet{
             int y = Integer.parseInt(x);
             return true;
         }catch (NumberFormatException ex) {
-            System.out.print("Error, enter integer value:");
             return false;
         }
     }
