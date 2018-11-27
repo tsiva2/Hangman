@@ -19,6 +19,9 @@ import javax.swing.JPanel;
 
 public class DrawMan extends JPanel {
     
+    public static final int length = 600;
+    public static final int height = 500;
+    
     public static int livesLeft;
     public static int livesLost; // would indicate number of body parts drawn
     
@@ -31,6 +34,10 @@ public class DrawMan extends JPanel {
     public Canvas canvas; // The custom drawing canvas
     
     public static boolean win;
+    public static boolean math;
+    
+    public static int num1;
+    public static int num2;
     
     // need to somehow make this run when its called
     // and have the word and number of guesses as parameters
@@ -41,6 +48,7 @@ public class DrawMan extends JPanel {
         this.livesLeft = 6;
         this.livesLost = 0;
         this.win = false;
+        this.math = false;
         this.wordAns = wordArray;
         this.wordGuess = correctArray;
         this.check = -1;
@@ -55,9 +63,15 @@ public class DrawMan extends JPanel {
         g.setColor(Color.BLACK); 
         g.setFont(new Font("TimesRoman", Font.PLAIN, 30));
         g.drawString("Level "+levelGraphics+":", 150, 25);
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 25));        
-        g.drawString("Guess a letter:", 150, 50); // number of spaces as word
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 25));  
+        if (!math){
+            g.drawString("Guess a letter:", 150, 50); 
+        }else{
+            g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+            g.drawString("Chance to remove the added body part!", 150, 50);
+        }
         
+        g.setFont(new Font("TimesRoman", Font.PLAIN, 25));
         int x = 50;
         int y = 100;
         man(g, x, y);
@@ -106,7 +120,6 @@ public class DrawMan extends JPanel {
             g2.drawLine(x+50, y+200, x, y+300);
         }
         if (livesLost>=6){
-            g2.setColor(Color.BLACK);
             g2.drawLine(x+50, y+200, x+100, y+300);
             g2.drawString("GAME OVER", 150, 100);
             g2.drawString("The word was: " + getWord(), 150, 150); // put word here
@@ -116,6 +129,15 @@ public class DrawMan extends JPanel {
         if (win){
             g2.setColor(Color.BLUE);
             g2.drawString("YOU WIN", 150, 100);
+        } else if (math){
+            g2.drawString(num1+" * "+num2+" = ?", 150, 250);
+            if (check==1){
+                g2.drawString("Correct!", 150, 100);
+            }else if (check==3){
+                g2.drawString("Invalid, enter integer value", 150, 100);
+            } else if (check == 0){
+                g2.drawString("Sorry, but the answer was "+ num1*num2, 150, 100);
+            }
         }else if (check==1){
             g2.setColor(Color.BLUE);
             g2.drawString("correct", 150, 100);
@@ -126,12 +148,16 @@ public class DrawMan extends JPanel {
         }else if (check==0){
             g2.drawString("incorrect", 150, 100);
         }
+        
+        
+        
+        
         if (win && (levelGraphics>=3) ){ // only shows this on startGUI()
             g2.setColor(Color.BLUE);
-            g2.fillRect(0, 0, 500, 500);
+            g2.fillRect(0, 0, length, height);
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("TimesRoman", Font.PLAIN, 40));
-            g2.drawString("YOU WON ALL 3 LEVELS", 0, 200);
+            g2.drawString("YOU WON ALL 3 LEVELS", 50, 200);
         }
         
     }
@@ -141,8 +167,7 @@ public class DrawMan extends JPanel {
     public static String getWord(){ 
         String answer = "";
         for (int j=0; j<(wordAns.length); j++){
-            answer = answer+wordAns[j];
-            
+            answer +=wordAns[j];           
         }
         return answer;
     }
