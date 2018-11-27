@@ -1,0 +1,373 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package hangmangameswing;
+
+import javax.swing.AbstractButton;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import javafx.application.Platform;
+import javafx.embed.swing.JFXPanel;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javax.swing.JApplet;
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
+import java.util.Scanner;
+
+import java.awt.*;     
+import java.awt.event.*;
+import javax.swing.*;    
+
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
+import java.awt.event.KeyEvent;
+
+import java.util.Random;
+
+/**
+ *
+ * @author S331385567
+ */
+public class HangmanGameSwing extends JApplet{
+
+    private static String[] LevelWord;
+    private static String[] Level1Word;
+    private static String[] Level2Word;
+    private static String[] Level3Word;
+    private static String [] correctGuess;
+    private static String [] letterGuess;
+    private int level = 1;
+    
+    private static final int JFXPANEL_WIDTH_INT = 300;
+    private static final int JFXPANEL_HEIGHT_INT = 100;
+    private static JFXPanel fxContainer;
+    
+    private static Container cp;
+    private static JApplet hangmanapplet;
+    private static JButton instructionsbtn;
+
+    /**
+     * @param args the command line arguments
+     */
+    public HangmanGameSwing() {
+        this.Level1Word = Level1List();
+        this.Level2Word = Level2List();
+        this.Level3Word = Level3List();       
+    }
+    
+     public HangmanGameSwing(String x) {
+        DrawMan canvas = new DrawMan();
+        canvas.setPreferredSize(new Dimension(500, 400));
+        JPanel btnPanel = new JPanel(new FlowLayout());
+      
+        instructionsbtn = new JButton("Review Instructions");
+        btnPanel.add(instructionsbtn);
+        
+        
+        instructionsbtn.addActionListener(new ActionListener() {
+            @Override
+         public void actionPerformed(java.awt.event.ActionEvent evt) {
+            System.out.println("Review Instructions");
+            System.out.println("1. Guess a letter in the word by asking in the text screen");
+            System.out.println("2. If you guess a word or letter wrong, a body part will be added to your hangman.");
+            System.out.println("3. If all the body parts are drawn in, you lose.");
+            System.out.println("4. If you guess the word right or have all the letters in, you move to the next level.");
+            System.out.println("5. Complete all levels and you win!");
+
+         }
+        });
+        
+        // Add both panels to this JFrame's content-pane
+        cp = getContentPane();
+        cp.setLayout(new BorderLayout());
+        cp.add(canvas, BorderLayout.CENTER);
+        cp.add(btnPanel, BorderLayout.SOUTH);
+        
+    }
+    
+    
+    
+    public static void main(String[] args) {
+        
+        SwingUtilities.invokeLater(new Runnable() {
+
+            HangmanGameSwing man = new HangmanGameSwing();
+
+            @Override
+            public void run() {
+                try {
+                    UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+                } catch (Exception e) {
+                }
+
+                JFrame frame = new JFrame("JavaFX 2 in Swing");
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+                JApplet applet = new HangmanGameSwing();
+                applet.init();
+
+                frame.setContentPane(applet.getContentPane());
+
+                frame.pack();
+                frame.setLocationRelativeTo(null);
+                frame.setVisible(true);
+
+                applet.start();
+            }
+        });
+    }
+
+    @Override
+    public void init() {
+        fxContainer = new JFXPanel();
+        fxContainer.setPreferredSize(new Dimension(JFXPANEL_WIDTH_INT, JFXPANEL_HEIGHT_INT));
+        add(fxContainer, BorderLayout.CENTER);
+        // create JavaFX scene
+        Platform.runLater(new Runnable() {
+
+            @Override
+            public void run() {
+                createScene();
+            }
+        });
+    }
+    
+
+    private void createScene() { // needs to be formatted if adding more buttons
+        JPanel addPanel = new JPanel();
+
+        Button btn = new Button();
+        btn.setText("Play New Game");
+        
+        StackPane root = new StackPane();
+        
+        btn.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                
+                root.getChildren().remove(btn);
+                HangmanGameSwing startthegame = new HangmanGameSwing();
+                startthegame.playGame(); // works here
+            }
+         
+        });
+        
+        root.getChildren().add(btn); 
+        fxContainer.setScene(new Scene(root));
+    }
+    
+    // code only works for words with no repetition of letters
+    public String[] Level1List() {
+        Random rand = new Random();
+        int n = rand.nextInt(3); // 4 options (0 to 3)
+        String[] arrayWord = new String []{"s", "o", "f", "t", "w", "a", "r", "e"}; // if n==0
+        switch (n){
+            case 1: 
+                arrayWord = new String[] {"c", "o", "m", "p", "u", "t", "e", "r"};
+                break;
+            case 2: 
+                arrayWord = new String[]{"c", "o", "d", "i", "n", "g"};
+                break;
+            case 3: 
+                arrayWord = new String[]{"m", "e", "t", "h", "o", "d"};
+                break;
+        }
+        return arrayWord;
+    }
+
+    public String[] Level2List(){ 
+        Random rand = new Random();
+        int n = rand.nextInt(3); // 4 options (0 to 3)
+        String[] arrayWord = new String []{"c", "h", "e", "m", "i", "s", "t", "r", "y"}; // if n==0
+        switch (n){
+            case 1: 
+                arrayWord = new String[] {"e", "n", "g", "l", "i", "s", "h"};
+                break;
+            case 2: 
+                arrayWord = new String[]{"s", "c", "h", "o", "l", "a", "r"};
+                break;
+            case 3: 
+                arrayWord = new String[]{"m", "a", "t", "h"};
+                break;
+        }
+        return arrayWord;
+    }
+
+    public String[] Level3List() {
+        Random rand = new Random();
+        int n = rand.nextInt(3); // 4 options (0 to 3)
+        String[] arrayWord = new String []{"a", "l", "g", "o", "r", "i", "t", "h", "m"}; // if n==0
+        switch (n){
+            case 1: 
+                arrayWord = new String[] {"g", "i", "t", "h", "u", "b"};
+                break;
+            case 2: 
+                arrayWord = new String[]{"o", "b", "j", "e", "c", "t"};
+                break;
+            case 3: 
+                arrayWord = new String[]{"e", "n", "u", "m"};
+                break;
+        }
+        return arrayWord;
+    }
+    
+    
+    public void startGUI() {
+        
+        System.out.println("started startgui");
+           
+        JFrame startframe = new JFrame("Start Screen");
+        startframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+        JButton btn1 = new JButton("Instructions");
+        btn1.setBounds(0, 30, 200, 30);
+        btn1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                System.out.println("works");
+            }
+        });
+        
+        JButton btn2 = new JButton("Play Game");
+        btn2.setBounds(0, 60, 200, 30);
+        btn2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                System.out.println("works too");
+                HangmanGameSwing startgame = new HangmanGameSwing();
+                startgame.playGame(); // not working here, but works in original button
+                // graphics screen shows up blank, with/wo object
+            }
+        });
+        
+        startframe.add(btn1);      
+        startframe.add(btn2);
+        startframe.setSize(218,190);
+        startframe.setLayout(null); 
+        startframe.setVisible(true);
+        
+        System.out.println("ended startgui");
+    }
+
+    
+    public void playGame(){
+        
+        String userinput;
+        char guess;
+        int numCorrect = 0;
+        int numGuessed = 0;
+        
+        switch (level){
+            case 1: LevelWord = Level1Word;
+                    break;
+            case 2: LevelWord = Level2Word;
+                    break;
+            case 3: LevelWord = Level3Word;
+                    break;
+        }
+        
+        letterGuess = new String[26]; // for each of the letters
+        correctGuess = new String [LevelWord.length] ;
+        for (int k=0; k<correctGuess.length; k++){
+            correctGuess[k] = "*"; // set all initial values to *
+        }
+        
+        Scanner input = new Scanner(System.in);
+
+        JFrame hangmanframe = new JFrame ("Hangman Level " + level);
+        hangmanframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        hangmanapplet = new HangmanGameSwing("start game");
+        hangmanapplet.init();
+        hangmanframe.setContentPane(hangmanapplet.getContentPane());
+        DrawMan h = new DrawMan(LevelWord, correctGuess, level);
+        hangmanframe.add(h);
+        hangmanframe.setSize(500, 500);
+        hangmanframe.setVisible(true);
+        
+        h.repaint();
+        HangmanGameSwing man = new HangmanGameSwing("start the game");
+       
+        while((h.livesLeft>0) && (numCorrect<LevelWord.length)){
+            
+            h.repaint(); // so the output message is outputted if continue is used
+            
+            userinput = input.nextLine();
+            guess = userinput.charAt(0);
+            
+            if ((Character.isLetter(guess) == false)|| (userinput.length()!= 1) ) {
+                h.check = 3;
+                continue;
+            }
+            
+            h.check = checkifcorrect(guess);
+            if (h.check==1){
+                correctGuess[numCorrect] = Character.toString(guess);
+                letterGuess[numGuessed] = Character.toString(guess);
+                numCorrect+= 1;
+                numGuessed+= 1;
+                h.wordGuess = correctGuess;
+                h.repaint();
+            }else if (h.check==0){ 
+                letterGuess[numGuessed] = Character.toString(guess); // won't do if check == 2 (already guessed letter)
+                numGuessed+= 1;
+                h.livesLost += 1 ;
+                h.livesLeft = 6 - h.livesLost ;
+                h.repaint();
+                
+            }
+            
+            
+        }
+        
+        
+        
+        if (numCorrect==LevelWord.length){
+            h.win = true;
+            h.repaint(); 
+            if (level<3){
+                level ++;
+                hangmanframe.setVisible(false);
+                playGame();
+            }
+        }
+        
+    }
+    
+    
+    
+    public static int checkifcorrect(Character userguess){
+        String userguessString = Character.toString(userguess);
+        int isitcorrect = 0;
+        
+        for (int y=0; y<LevelWord.length; y++){
+            if (userguessString.equalsIgnoreCase(LevelWord[y])){
+                isitcorrect = 1;
+              }
+        }
+        
+        for (int z=0; z<letterGuess.length; z++){
+            if (userguessString.equalsIgnoreCase(letterGuess[z]) ){ // if not already guessed and correct
+                 isitcorrect = 2;
+                 break;
+                 // shouldn't draw body part if here
+             }
+        }
+        
+        return isitcorrect;    
+    }
+
+}
